@@ -1,0 +1,58 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+// publishing
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+        }
+    }
+}
+
+// set bintrayUser & bintrayKey in gradle.properties
+bintray {
+    user = getPropertyOrUseDefault('bintrayUser', 'fake_user')
+    key = getPropertyOrUseDefault('bintrayKey', 'fake_key')
+    publications = ['groovyMaven']
+
+    pkg {
+        websiteUrl = "https://github.com/agorapulse/agorapulse/remember"
+        issueTrackerUrl = "https://github.com/agorapulse/remember/issues"
+        vcsUrl = "https://github.com/agorapulse/agorapulse/remember.git"
+
+        repo = 'libs' // or your repo name
+        userOrg = 'agorapulse'
+        name = project.name       // somehow project.* doesn't work in this closure
+        desc = project.description
+        licenses = ['Apache-2.0']
+    }
+    // dryRun = true // whether to run this as dry-run, without deploying
+}
+
+// custom tasks for creating source/javadoc jars
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+String getPropertyOrUseDefault(String propertyName, String defaultValue) {
+    hasProperty(propertyName) ? getProperty(propertyName) : defaultValue
+}

@@ -14,3 +14,6 @@ dependencies {
 
 version '0.1'
 group 'com.agorapulse'
+
+
+apply from: 'gradle/bintray.gradle'
