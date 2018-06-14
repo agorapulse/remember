@@ -5,4 +5,5 @@ repositories {
 
 dependencies {
     compile 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1'
+    compile 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 }
