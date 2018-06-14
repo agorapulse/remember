@@ -13,7 +13,7 @@ more permanent solution.
 
 ## Full Usage
 
-```groovy
+```
 import com.agorapulse.remember.Remember
 
 @Remember(
