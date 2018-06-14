@@ -1,4 +1,7 @@
 # Remember
+
+[![Download](https://api.bintray.com/packages/agorapulse/libs/remember/images/download.svg)](https://bintray.com/agorapulse/libs/remember/_latestVersion) [![Build Status](https://travis-ci.org/agorapulse/remember.svg?branch=master)](https://travis-ci.org/agorapulse/remember) [![Coverage Status](https://coveralls.io/repos/github/agorapulse/remember/badge.svg?branch=master)](https://coveralls.io/github/agorapulse/remember?branch=master)
+
 Say Good Bye to Temporary Hacks
 
 # Introduction
