@@ -75,6 +75,22 @@ class RememberSpec extends Specification {
             assertMessage(e, 'This method should be already removed @ line 4, column 17.')
     }
 
+    void 'remember wrong date'() {
+        when:
+            // language=Groovy
+            GroovyAssert.assertScript """
+                import com.agorapulse.remember.Remember
+
+                @Remember('the milk')   
+                class Subject { }
+                
+                true
+            """
+        then:
+            MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
+            assertMessage(e, 'Unable to parse date \'the milk\' using format \'yyyy-MM-dd\':\njava.text.ParseException: Unparseable date: "the milk" @ line 4, column 17.')
+    }
+
     boolean assertMessage(MultipleCompilationErrorsException multipleCompilationErrorsException, String message) {
         assert multipleCompilationErrorsException.errorCollector
         assert multipleCompilationErrorsException.errorCollector.errorCount == 1
