@@ -1,0 +1,16 @@
+plugins {
+    id 'groovy'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.14'
+
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+}
+
+version '0.1'
+group 'com.agorapulse'
