@@ -24,3 +24,7 @@ more permanent solution.
 
 You can modify the format of the date `value` by setting `format` property of the annotation.
 You can customize the message being shown by using `description` property. 
+
+## Maintained by
+
+[![Agorapulse](https://cloud.githubusercontent.com/assets/139017/17053391/4a44735a-5034-11e6-8e72-9f4b7139d7e0.png)](https://www.agorapulse.com/)
