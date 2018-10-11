@@ -42,4 +42,9 @@ public @interface Remember {
      */
     String description() default RememberTransformation.DEFAULT_DESCRIPTION;
 
+    /**
+     * @return developer responsible of resoliving the issues associated with this annotation
+     */
+    String owner() default "";
+
 }

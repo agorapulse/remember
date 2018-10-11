@@ -12,7 +12,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
 
-version '0.1'
+version '0.1.1'
 group 'com.agorapulse'
 
 

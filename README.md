@@ -13,17 +13,21 @@ more permanent solution.
 
 ## Full Usage
 
-    import com.agorapulse.remember.Remember
-    
-    @Remember(
-        value = '2019', 
-        description = 'This method should be already removed', 
-        format = 'yyyy'
-    )   
-    class Subject { }
+```groovy
+import com.agorapulse.remember.Remember
+
+@Remember(
+    value = '2019', 
+    description = 'This method should be already removed', 
+    format = 'yyyy',
+    owner = 'musketyr'
+)   
+class Subject { }
+```
 
 You can modify the format of the date `value` by setting `format` property of the annotation.
-You can customize the message being shown by using `description` property. 
+You can customize the message being shown by using `description` property. You can add an `owner` 
+who is responsible for action which needs to be taken when the annotation expires. 
 
 ## Maintained by
 

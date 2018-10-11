@@ -64,7 +64,8 @@ class RememberSpec extends Specification {
                 @Remember(
                     value = '2000', 
                     description = 'This method should be already removed', 
-                    format = 'yyyy'
+                    format = 'yyyy',
+                    owner = 'musketyr'
                 )   
                 class Subject { }
                 
