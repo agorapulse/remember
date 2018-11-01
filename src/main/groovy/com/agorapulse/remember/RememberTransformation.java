@@ -23,6 +23,9 @@ public class RememberTransformation implements ASTTransformation {
     static final String DEFAULT_FORMAT = "yyyy-MM-dd";
     static final String DEFAULT_DESCRIPTION = "Please, make sure the annotated element is still valid for your codebase";
 
+    private static final String CI_ENV_VAR = "CI";
+    private static final String CI_SYSTEM_PROPERTY = "ci";
+
     @Override
     public void visit(ASTNode[] nodes, SourceUnit source) {
         AnnotationNode annotation = (AnnotationNode) nodes[0];
@@ -36,6 +39,13 @@ public class RememberTransformation implements ASTTransformation {
         Expression descriptionExpression = annotation.getMember("description");
         String description = descriptionExpression != null ? descriptionExpression.getText() : DEFAULT_DESCRIPTION;
 
+        Expression ciExpression = annotation.getMember("ci");
+        boolean ci = ciExpression != null && Boolean.TRUE.toString().equals(ciExpression.getText());
+
+        if (!ci && isRunningCI()) {
+            return;
+        }
+
         try {
             DateFormat dateFormat = new SimpleDateFormat(format);
             Date dateToRemember = dateFormat.parse(value);
@@ -45,6 +55,10 @@ public class RememberTransformation implements ASTTransformation {
         } catch (ParseException e) {
             source.addError(createSyntaxException(annotation, String.format("Unable to parse date '%s' using format '%s':%n%s", value, format, e.toString())));
         }
+    }
+
+    private boolean isRunningCI() {
+        return Boolean.TRUE.toString().equals(System.getenv(CI_ENV_VAR)) || Boolean.TRUE.toString().equals(System.getProperty(CI_SYSTEM_PROPERTY));
     }
 
     private SyntaxException createSyntaxException(AnnotationNode annotation, String message) {

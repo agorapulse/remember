@@ -47,4 +47,9 @@ public @interface Remember {
      */
     String owner() default "";
 
+    /**
+     * @return whether the annotation should fail during the CI execution, defaults to <code>false</code>
+     */
+    boolean ci() default false;
+
 }
