@@ -3,5 +3,8 @@ language: groovy
 jdk:
 - oraclejdk8
 
+before_script: unset CI
+after_script: set CI=true
+
 after_success:
 - ./gradlew jacocoTestReport coveralls
