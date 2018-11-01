@@ -5,6 +5,7 @@ import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import org.codehaus.groovy.syntax.SyntaxException
 import spock.lang.Specification
+import spock.util.environment.RestoreSystemProperties
 
 class RememberSpec extends Specification {
 
@@ -30,6 +31,46 @@ class RememberSpec extends Specification {
                 import com.agorapulse.remember.Remember
 
                 @Remember('1999-01-01')   
+                class Subject { }
+                
+                true
+            """
+        then:
+            MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
+            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 17.')
+    }
+
+   @RestoreSystemProperties
+    void 'remember in past does not raises exception on ci'() {
+        given:
+            System.setProperty('ci', 'true')
+        when:
+            // language=Groovy
+            GroovyAssert.assertScript """
+                import com.agorapulse.remember.Remember
+
+                @Remember('1999-01-01')   
+                class Subject { }
+                
+                true
+            """
+        then:
+            noExceptionThrown()
+    }
+
+    @RestoreSystemProperties
+    void 'remember in past raises exception on ci when ci is set to true'() {
+        given:
+            System.setProperty('ci', 'true')
+        when:
+            // language=Groovy
+            GroovyAssert.assertScript """
+                import com.agorapulse.remember.Remember
+
+                @Remember(
+                    value = '1999-01-01',
+                    ci = true
+                )   
                 class Subject { }
                 
                 true

@@ -20,14 +20,20 @@ import com.agorapulse.remember.Remember
     value = '2019', 
     description = 'This method should be already removed', 
     format = 'yyyy',
-    owner = 'musketyr'
+    owner = 'musketyr',
+    ci = true
 )   
 class Subject { }
 ```
 
 You can modify the format of the date `value` by setting `format` property of the annotation.
-You can customize the message being shown by using `description` property. You can add an `owner` 
-who is responsible for action which needs to be taken when the annotation expires. 
+
+You can customize the message being shown by using `description` property. 
+
+You can add an `owner` who is responsible for action which needs to be taken when the annotation expires.
+
+You can force failing on continuous integration server by setting `ci` to `true`. By default, the annotation will
+only fail during local builds. 
 
 ## Maintained by
 
