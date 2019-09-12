@@ -9,10 +9,11 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.14'
 
+    testCompile 'com.github.stefanbirkner:system-rules:1.19.0'
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
 
-version '0.2'
+version '0.3'
 group 'com.agorapulse'
 
 
