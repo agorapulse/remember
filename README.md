@@ -6,12 +6,12 @@ Say Good Bye to Temporary Hacks
 
 # Introduction
 
+## @Remember
+
 `@Remember` is an annotation which helps you not to forget any temporary solution (aka hacks or quick wins)
 you have introduced into your code base. You specify the date in the future when you want to revisit the code, e.g. `@Remember('2018-12-24)`.
 After this date the code no longer compiles forcing you to re-evaluate if the code is still required or to find
 more permanent solution.
-
-## Full Usage
 
 ```groovy
 import com.agorapulse.remember.Remember
@@ -34,6 +34,21 @@ You can add an `owner` who is responsible for action which needs to be taken whe
 
 You can force failing on continuous integration server by setting `ci` to `true`. By default, the annotation will
 only fail during local builds. 
+
+## @DoNotMerge
+
+If you have a code you want to discuss with your colleagues before merging to the main branch or simply
+you have created a temporary solution which should never enter the main branch then you can use `@DoNotMerge`
+annotation. If the library recognizes (on a best effort) that the build has been triggered by pull request then
+it will fail to compile. 
+
+```groovy
+import com.agorapulse.remember.DoNotMerge
+
+@DoNotMerge('Just testing some stuff')   
+class Subject { }
+```
+
 
 ## Maintained by
 
