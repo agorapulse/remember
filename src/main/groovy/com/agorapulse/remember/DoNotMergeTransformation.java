@@ -34,6 +34,21 @@ public class DoNotMergeTransformation implements ASTTransformation {
     }
 
     private boolean isPullRequest() {
+        return isTravisPullRequest() || isGithubActionPullRequest();
+    }
+
+    private boolean isGithubActionPullRequest() {
+        return System.getenv()
+            .keySet()
+            .stream()
+            .filter(key -> key.endsWith("GITHUB_REF"))
+            .findAny()
+            .map(System::getenv)
+            .map(value -> value != null && value.length > 0 && value.startsWith("refs/pull/"))
+            .orElse(false);
+    }
+
+    private boolean isTravisPullRequest() {
         return System.getenv()
             .keySet()
             .stream()
@@ -42,7 +57,6 @@ public class DoNotMergeTransformation implements ASTTransformation {
             .map(System::getenv)
             .map(value -> value.length() > 0 && !"false".equals(value))
             .orElse(false);
-
     }
 
     private SyntaxException createSyntaxException(AnnotationNode annotation, String message) {
