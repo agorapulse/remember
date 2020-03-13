@@ -44,7 +44,7 @@ public class DoNotMergeTransformation implements ASTTransformation {
             .filter(key -> key.endsWith("GITHUB_REF"))
             .findAny()
             .map(System::getenv)
-            .map(value -> value != null && value.length > 0 && value.startsWith("refs/pull/"))
+            .map(value -> value != null && value.length() > 0 && value.startsWith("refs/pull/"))
             .orElse(false);
     }
 
