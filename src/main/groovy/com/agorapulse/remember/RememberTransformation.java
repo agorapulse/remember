@@ -25,7 +25,7 @@ public class RememberTransformation implements ASTTransformation {
 
     private static final String CI_ENV_VAR = "CI";
     private static final String CI_SYSTEM_PROPERTY = "ci";
-    private static final String GITHUB_WORKFLOW_ENV_VAR = "GITHUB_WORKFLOW"
+    private static final String GITHUB_WORKFLOW_ENV_VAR = "GITHUB_WORKFLOW";
 
     @Override
     public void visit(ASTNode[] nodes, SourceUnit source) {
@@ -61,7 +61,7 @@ public class RememberTransformation implements ASTTransformation {
     private boolean isRunningCI() {
         return Boolean.TRUE.toString().equals(System.getenv(CI_ENV_VAR))
             || System.getenv(GITHUB_WORKFLOW_ENV_VAR) != null
-            || Boolean.TRUE.toString().equals(System.getProperty(CI_SYSTEM_PROPERTY))
+            || Boolean.TRUE.toString().equals(System.getProperty(CI_SYSTEM_PROPERTY));
     }
 
     private SyntaxException createSyntaxException(AnnotationNode annotation, String message) {
