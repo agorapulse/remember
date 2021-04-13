@@ -1,21 +1,197 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2019-2021 Agorapulse.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 plugins {
-    id 'groovy'
+    id 'org.kordamp.gradle.groovy-project'
+    id 'org.kordamp.gradle.bintray'
+    id 'org.kordamp.gradle.checkstyle'
+    id 'org.kordamp.gradle.codenarc'
+    id 'org.kordamp.gradle.coveralls'
 }
 
-repositories {
-    jcenter()
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = '**UNDEFINED**'
+if (!project.hasProperty('bintrayApiKey'))   ext.bintrayApiKey   = '**UNDEFINED**'
+
+config {
+    release = (rootProject.findProperty('release') ?: false).toBoolean()
+
+    info {
+        name        = 'Agorapulse Remember'
+        vendor      = 'Agorapulse'
+        description = 'Agorapulse Remember'
+
+        links {
+            website      = "https://github.com/" + slug
+            issueTracker = "https://github.com/" + slug + "/issues"
+            scm          = "https://github.com/" + slug + ".git"
+        }
+
+        people {
+            person {
+                id    = 'musketyr'
+                name  = 'Vladimir Orany'
+                roles = ['developer']
+            }
+        }
+
+        repositories {
+            repository {
+                name = 'localRelease'
+                url  = "" + project.rootProject.buildDir + "/repos/local/release"
+            }
+            repository {
+                name = 'localSnapshot'
+                url  = "" + project.rootProject.buildDir + "/repos/local/snapshot"
+            }
+        }
+    }
+
+    licensing {
+        licenses {
+            license {
+                id = 'Apache-2.0'
+            }
+        }
+    }
+
+    publishing {
+        signing             = false
+        releasesRepository  = 'localRelease'
+        snapshotsRepository = 'localSnapshot'
+    }
+
+    bintray {
+        credentials {
+            username = bintrayUsername
+            password = bintrayApiKey
+        }
+        // TODO: replace
+        userOrg    = 'agorapulse'
+        repo       = 'libs'
+        name       = 'remember'
+        publish    = true
+    }
+
+    quality {
+        checkstyle {
+            toolVersion = '8.27'
+        }
+
+        codenarc {
+            toolVersion = '1.5'
+        }
+    }
+
+    docs {
+        groovydoc {
+            enabled = false
+            aggregate {
+                enabled = false
+            }
+        }
+    }
+
 }
 
-dependencies {
-    compile 'org.codehaus.groovy:groovy:2.5.9'
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url  "https://dl.bintray.com/agorapulse/libs" }
+        maven { url "https://repo.spring.io/release"  }
+    }
 
-    testCompile 'com.github.stefanbirkner:system-rules:1.19.0'
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    license {
+        exclude '**/*.json'
+        exclude '***.yml'
+    }
 }
 
-version '0.4.1'
-group 'com.agorapulse'
+projects {
+    subprojects {
+        dirs(['libs', 'examples']) { Project subproject ->
+            sourceCompatibility = 1.8
+            targetCompatibility = 1.8
+
+            repositories {
+                mavenCentral()
+            }
+
+            config {
+                bintray {
+                    name = subproject.name
+                }
+            }
+
+            // location independent tests (useful for stable CI builds)
+            tasks.withType(Test){
+                systemProperty 'user.timezone', 'UTC'
+                systemProperty 'user.language', 'en'
+            }
+
+            tasks.withType(JavaCompile) {
+                options.encoding = "UTF-8"
+                options.compilerArgs.add('-parameters')
+            }
+
+            tasks.withType(GroovyCompile) {
+                groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+            }
+
+            dependencies {
+                api platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+                compile platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+                implementation platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+                compileOnly platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+                testCompile platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+                testImplementation platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+            }
+
+            // useful for IntelliJ
+            task cleanOut(type: Delete) {
+                delete file('out')
+            }
+
+            clean.dependsOn cleanOut
+        }
+
+        dir('libs') {
+            processResources {
+                filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+                    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
+                }
+            }
+
+            jar {
+                manifest.attributes provider: 'gradle'
+            }
+
+            config {
+                bintray {
+                    enabled = true
+                }
+            }
+
+            dependencies {
+                testImplementation group: 'org.spockframework', name: 'spock-core', version: spockVersion
+            }
+        }
+    }
+}
 
 
-apply from: 'gradle/bintray.gradle'
-apply from: 'gradle/coveralls.gradle'
+check.dependsOn('aggregateCheckstyle', 'aggregateCodenarc', 'aggregateAllTestReports', 'coveralls')

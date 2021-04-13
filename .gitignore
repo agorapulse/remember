@@ -1,12 +1,23 @@
-.gradle
-**/build/
-**/out/
-**/.idea/
-**/*.iml
-# Ignore Gradle GUI config
-gradle-app.setting
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+# Gradle
+build/
+.gradle/
 
-**.hprof
+# IDEs
+
+*.c9
+*.iml
+*.ipr
+*.iws
+*.vscode
+.idea/
+.asscache
+MANIFEST.MF
+out
+
+# PAW
+*.paw
+
+# Redis
+*.rdb
+

@@ -1,0 +1,13 @@
+[[_installation_]]
+= Installation
+
+
+----
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.agorapulse:remember:{project-version}'
+}
+----

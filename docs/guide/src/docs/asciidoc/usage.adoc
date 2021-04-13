@@ -1,0 +1,42 @@
+
+[[_usage]]
+= Usage
+
+[source,groovy]
+----
+import com.agorapulse.remember.Remember
+
+@Remember(
+    value = '2019',
+    description = 'This method should be already removed',
+    format = 'yyyy',
+    owner = 'musketyr',
+    ci = true
+)
+class Subject { }
+----
+
+You can modify the format of the date `value` by setting `format` property of the annotation.
+
+You can customize the message being shown by using `description` property.
+
+You can add an `owner` who is responsible for action which needs to be taken when the annotation expires.
+
+You can force failing on continuous integration server by setting `ci` to `true`.By default, the annotation will
+only fail during local builds.
+
+== @DoNotMerge
+
+If you have a code you want to discuss with your colleagues before merging to the main branch or simply
+you have created a temporary solution which should never enter the main branch then you can use `@DoNotMerge`
+annotation.If the library recognizes (on a best effort) that the build has been triggered by pull request then
+it will fail to compile.
+
+[source,groovy]
+----
+import com.agorapulse.remember.DoNotMerge
+
+@DoNotMerge('Just testing some stuff')
+class Subject { }
+----
+

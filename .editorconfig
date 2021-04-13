@@ -1,22 +1,18 @@
-# EditorConfig is awesome: http://EditorConfig.org
-
-# top-most EditorConfig file
+# Editor configuration, see http://editorconfig.org
 root = true
 
 [*]
-end_of_line = lf
 charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
-
 indent_style = space
 indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
 
 [*.yml]
 # YAML should be space separated see https://en.wikipedia.org/wiki/YAML#Pitfalls_and_implementation_defects
-indent_style = space
-indent_size = 2
-
-[*.{gsp,html,coffee,less,json,js,es6}]
 indent_style = space
 indent_size = 2
