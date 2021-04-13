@@ -21,11 +21,19 @@ import groovy.test.GroovyAssert
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import org.codehaus.groovy.syntax.SyntaxException
+import org.junit.Rule
+import org.junit.contrib.java.lang.system.EnvironmentVariables
 import spock.lang.Specification
 import spock.util.environment.RestoreSystemProperties
 
 @SuppressWarnings('TrailingWhitespace')
 class RememberSpec extends Specification {
+
+    @Rule EnvironmentVariables environmentVariables = new EnvironmentVariables()
+
+    void setup() {
+        environmentVariables.clear('GITHUB_WORKFLOW')
+    }
 
     void 'remember in future is ignored'() {
         when:

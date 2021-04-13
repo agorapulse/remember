@@ -28,7 +28,7 @@ import spock.lang.Specification
 @SuppressWarnings('TrailingWhitespace')
 class DoNotMergeSpec extends Specification {
 
-    public static final String PR_ENV_VAR_NAME = 'TRAVIS_PULL_REQUEST'
+    public static final String PR_ENV_VAR_NAME = 'GITHUB_REF'
     @Rule EnvironmentVariables environmentVariables = new EnvironmentVariables()
 
     void 'the annotation is ignored by default'() {
