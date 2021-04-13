@@ -32,7 +32,7 @@ class RememberSpec extends Specification {
     @Rule EnvironmentVariables environmentVariables = new EnvironmentVariables()
 
     void setup() {
-        environmentVariables.clear('GITHUB_WORKFLOW')
+        environmentVariables.clear('GITHUB_WORKFLOW', 'CI')
     }
 
     void 'remember in future is ignored'() {
