@@ -52,7 +52,7 @@ class DoNotMergeSpec extends Specification {
     void 'the annotation is ignored of the pull request env var is false'() {
         when:
             // to pass PR build for this library
-            environmentVariables.set(PR_ENV_VAR_NAME, 'false')
+            environmentVariables.clear(PR_ENV_VAR_NAME)
 
             // language=Groovy
             GroovyAssert.assertScript '''
@@ -69,7 +69,7 @@ class DoNotMergeSpec extends Specification {
 
     void 'error is reported on PR build'() {
         when:
-            environmentVariables.set(PR_ENV_VAR_NAME, '123456')
+            environmentVariables.set(PR_ENV_VAR_NAME, 'refs/pull/123456')
             // language=Groovy
             GroovyAssert.assertScript '''
                 import com.agorapulse.remember.DoNotMerge
@@ -86,7 +86,7 @@ class DoNotMergeSpec extends Specification {
 
     void 'error is reported on PR build - with details'() {
         when:
-            environmentVariables.set(PR_ENV_VAR_NAME, '123456')
+            environmentVariables.set(PR_ENV_VAR_NAME, 'refs/pull/123456')
             // language=Groovy
             GroovyAssert.assertScript """
                 import com.agorapulse.remember.DoNotMerge
