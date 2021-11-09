@@ -21,9 +21,9 @@ import groovy.test.GroovyAssert
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import org.codehaus.groovy.syntax.SyntaxException
-import org.junit.Rule
-import org.junit.contrib.java.lang.system.EnvironmentVariables
 import spock.lang.Specification
+
+import static com.github.stefanbirkner.systemlambda.SystemLambda.*
 
 @SuppressWarnings('TrailingWhitespace')
 class DoNotMergeSpec extends Specification {
