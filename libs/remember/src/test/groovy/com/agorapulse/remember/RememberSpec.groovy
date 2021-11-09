@@ -22,9 +22,10 @@ import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import org.codehaus.groovy.syntax.SyntaxException
 import org.junit.Rule
-import org.junit.contrib.java.lang.system.EnvironmentVariables
 import spock.lang.Specification
 import spock.util.environment.RestoreSystemProperties
+
+import static com.github.stefanbirkner.systemlambda.SystemLambda.*
 
 @SuppressWarnings('TrailingWhitespace')
 class RememberSpec extends Specification {
