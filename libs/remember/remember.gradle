@@ -18,6 +18,6 @@
 dependencies {
     compile 'org.codehaus.groovy:groovy'
 
-    testCompile 'com.github.stefanbirkner:system-rules:1.19.0'
+    testCompile "com.github.stefanbirkner:system-lamnbda:$systemLambdaVersion"
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
