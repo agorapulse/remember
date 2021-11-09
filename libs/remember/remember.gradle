@@ -20,4 +20,5 @@ dependencies {
 
     testCompile "com.github.stefanbirkner:system-lambda:$systemLambdaVersion"
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    testCompile 'org.codehaus.groovy:groovy-test'
 }

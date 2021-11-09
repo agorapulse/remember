@@ -29,15 +29,12 @@ import static com.github.stefanbirkner.systemlambda.SystemLambda.*
 class DoNotMergeSpec extends Specification {
 
     public static final String PR_ENV_VAR_NAME = 'GITHUB_REF'
-    @Rule EnvironmentVariables environmentVariables = new EnvironmentVariables()
 
     void 'the annotation is ignored by default'() {
         when:
-            // to pass PR build for this library
-            environmentVariables.clear(PR_ENV_VAR_NAME)
-
-            // language=Groovy
-            GroovyAssert.assertScript '''
+            withEnvironmentVariable(PR_ENV_VAR_NAME, null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
                 import com.agorapulse.remember.DoNotMerge
 
                 @DoNotMerge
@@ -45,6 +42,8 @@ class DoNotMergeSpec extends Specification {
 
                 true
             '''
+            }
+
         then:
             noExceptionThrown()
     }
@@ -52,10 +51,9 @@ class DoNotMergeSpec extends Specification {
     void 'the annotation is ignored of the pull request env var is false'() {
         when:
             // to pass PR build for this library
-            environmentVariables.clear(PR_ENV_VAR_NAME)
-
-            // language=Groovy
-            GroovyAssert.assertScript '''
+            withEnvironmentVariable(PR_ENV_VAR_NAME, null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
                 import com.agorapulse.remember.DoNotMerge
 
                 @DoNotMerge
@@ -63,45 +61,50 @@ class DoNotMergeSpec extends Specification {
 
                 true
             '''
+            }
+
         then:
             noExceptionThrown()
     }
 
     void 'error is reported on PR build'() {
         when:
-            environmentVariables.set(PR_ENV_VAR_NAME, 'refs/pull/123456')
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.DoNotMerge
+            withEnvironmentVariable(PR_ENV_VAR_NAME,  'refs/pull/123456').execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.DoNotMerge
 
-                @DoNotMerge
-                class Subject { }
+                    @DoNotMerge
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'Do not merge @ line 4, column 17.')
+            assertMessage(e, 'Do not merge @ line 4, column 21.')
     }
 
     void 'error is reported on PR build - with details'() {
         when:
-            environmentVariables.set(PR_ENV_VAR_NAME, 'refs/pull/123456')
-            // language=Groovy
-            GroovyAssert.assertScript """
-                import com.agorapulse.remember.DoNotMerge
+            withEnvironmentVariable(PR_ENV_VAR_NAME, 'refs/pull/123456').execute {
+                // language=Groovy
+                GroovyAssert.assertScript """
+                    import com.agorapulse.remember.DoNotMerge
 
-                @DoNotMerge('This will break everything!')
-                class Subject { }
+                    @DoNotMerge('This will break everything!')
+                    class Subject { }
 
-                true
-            """
+                    true
+                """
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'This will break everything! @ line 4, column 17.')
+            assertMessage(e, 'This will break everything! @ line 4, column 21.')
     }
 
-    boolean assertMessage(MultipleCompilationErrorsException multipleCompilationErrorsException, String message) {
+    @SuppressWarnings('Instanceof')
+    private static boolean assertMessage(MultipleCompilationErrorsException multipleCompilationErrorsException, String message) {
         assert multipleCompilationErrorsException.errorCollector
         assert multipleCompilationErrorsException.errorCollector.errorCount == 1
         assert multipleCompilationErrorsException.errorCollector.errors.first() instanceof SyntaxErrorMessage
