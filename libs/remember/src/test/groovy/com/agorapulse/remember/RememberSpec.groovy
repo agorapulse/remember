@@ -21,49 +21,47 @@ import groovy.test.GroovyAssert
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage
 import org.codehaus.groovy.syntax.SyntaxException
-import org.junit.Rule
-import org.junit.contrib.java.lang.system.EnvironmentVariables
 import spock.lang.Specification
 import spock.util.environment.RestoreSystemProperties
+
+import static com.github.stefanbirkner.systemlambda.SystemLambda.*
 
 @SuppressWarnings('TrailingWhitespace')
 class RememberSpec extends Specification {
 
-    @Rule EnvironmentVariables environmentVariables = new EnvironmentVariables()
-
-    void setup() {
-        environmentVariables.clear('GITHUB_WORKFLOW', 'CI')
-    }
-
     void 'remember in future is ignored'() {
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember('2999-01-01')
-                class Subject { }
+                    @Remember('2999-01-01')
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             noExceptionThrown()
     }
 
     void 'remember in past raises exception'() {
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember('1999-01-01')
-                class Subject { }
+                    @Remember('1999-01-01')
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 17.')
+            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 21.')
     }
 
    @RestoreSystemProperties
@@ -71,15 +69,17 @@ class RememberSpec extends Specification {
         given:
             System.setProperty('ci', 'true')
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember('1999-01-01')
-                class Subject { }
+                    @Remember('1999-01-01')
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             noExceptionThrown()
     }
@@ -89,78 +89,86 @@ class RememberSpec extends Specification {
         given:
             System.setProperty('ci', 'true')
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember(
-                    value = '1999-01-01',
-                    ci = true
-                )
-                class Subject { }
+                    @Remember(
+                        value = '1999-01-01',
+                        ci = true
+                    )
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 17.')
+            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 21.')
     }
 
     void 'remember in past raises exception (different format)'() {
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
                 import com.agorapulse.remember.Remember
 
-                @Remember(value = '19990101', format = 'yyyyMMdd')
-                class Subject { }
+                    @Remember(value = '19990101', format = 'yyyyMMdd')
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 17.')
+            assertMessage(e, 'Please, make sure the annotated element is still valid for your codebase @ line 4, column 21.')
     }
 
     void 'remember in past raises exception (different description)'() {
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember(
-                    value = '2000',
-                    description = 'This method should be already removed',
-                    format = 'yyyy',
-                    owner = 'musketyr'
-                )
-                class Subject { }
+                    @Remember(
+                        value = '2000',
+                        description = 'This method should be already removed',
+                        format = 'yyyy',
+                        owner = 'musketyr'
+                    )
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'This method should be already removed @ line 4, column 17.')
+            assertMessage(e, 'This method should be already removed @ line 4, column 21.')
     }
 
     @SuppressWarnings('LineLength')
     void 'remember wrong date'() {
         when:
-            // language=Groovy
-            GroovyAssert.assertScript '''
-                import com.agorapulse.remember.Remember
+            withEnvironmentVariable('GITHUB_WORKFLOW', null).and('CI', null).execute {
+                // language=Groovy
+                GroovyAssert.assertScript '''
+                    import com.agorapulse.remember.Remember
 
-                @Remember('the milk')
-                class Subject { }
+                    @Remember('the milk')
+                    class Subject { }
 
-                true
-            '''
+                    true
+                '''
+            }
         then:
             MultipleCompilationErrorsException e = thrown(MultipleCompilationErrorsException)
-            assertMessage(e, 'Unable to parse date \'the milk\' using format \'yyyy-MM-dd\':\njava.text.ParseException: Unparseable date: "the milk" @ line 4, column 17.')
+            assertMessage(e, 'Unable to parse date \'the milk\' using format \'yyyy-MM-dd\':\njava.text.ParseException: Unparseable date: "the milk" @ line 4, column 21.')
     }
 
-    boolean assertMessage(MultipleCompilationErrorsException multipleCompilationErrorsException, String message) {
+    private static boolean assertMessage(MultipleCompilationErrorsException multipleCompilationErrorsException, String message) {
         assert multipleCompilationErrorsException.errorCollector
         assert multipleCompilationErrorsException.errorCollector.errorCount == 1
         assert multipleCompilationErrorsException.errorCollector.errors.first() instanceof SyntaxErrorMessage
