@@ -81,6 +81,6 @@ public class DoNotMergeProcessor extends AbstractProcessor {
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
+        return SourceVersion.RELEASE_8;
     }
 }
