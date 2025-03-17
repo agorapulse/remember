@@ -1,6 +1,7 @@
 [[_installation_]]
 = Installation
 
+== Groovy Projects
 
 ----
 repositories {
@@ -8,6 +9,37 @@ repositories {
 }
 
 dependencies {
-    compile 'com.agorapulse:remember:{project-version}'
+    implementation 'com.agorapulse:remember:{project-version}'
 }
+----
+
+== Java Projects
+
+For Java projects, you need to add the annotation processor:
+
+.Gradle
+[source,groovy]
+----
+dependencies {
+    implementation 'com.agorapulse:remember:{project-version}'
+    annotationProcessor 'com.agorapulse:remember-processor:{project-version}'
+}
+----
+
+.Maven
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>com.agorapulse</groupId>
+        <artifactId>remember</artifactId>
+        <version>{project-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.agorapulse</groupId>
+        <artifactId>remember-processor</artifactId>
+        <version>{project-version}</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
 ----

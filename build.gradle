@@ -192,6 +192,14 @@ projects {
                 testImplementation group: 'org.spockframework', name: 'spock-core', version: spockVersion
             }
         }
+        
+        dir('libs/remember-processor') {
+            config {
+                bintray {
+                    enabled = true
+                }
+            }
+        }
     }
 }
 

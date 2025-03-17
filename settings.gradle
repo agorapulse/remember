@@ -50,4 +50,9 @@ projects {
             id 'groovy'
         }
     }
+
+    // Add processor module explicitly
+    dir('libs/remember-processor') {
+        name = 'remember-processor'
+    }
 }
