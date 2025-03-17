@@ -114,6 +114,14 @@ public class RememberProcessor extends AbstractProcessor {
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.RELEASE_8;
+        // Try to support the latest version available in the current JVM
+        // but fall back to Java 8 if higher versions aren't available
+        try {
+            // First try to use the highest available version
+            return SourceVersion.latest();
+        } catch (Exception e) {
+            // Fall back to Java 8 if there's any issue
+            return SourceVersion.RELEASE_8;
+        }
     }
 }
